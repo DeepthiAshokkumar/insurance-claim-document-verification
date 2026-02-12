@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Document Processing</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Intelligent Document Processing</h1>
+        <p>Upload a document (image) to extract structured data.</p>
+        
+        <div class="upload-section">
+            <input type="file" id="fileInput" accept="image/*">
+            <button onclick="uploadFile()">Extract Data</button>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="image-preview">
+                <h3>Original Document</h3>
+                <img id="previewImage" src="" alt="Document Preview">
+            </div>
+            <div class="json-output">
+                <h3>Extracted Data</h3>
+                <pre id="jsonOutput">Processing...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Please select a file first.");
+                return;
+            }
+
+            // Show preview
+            const previewImage = document.getElementById('previewImage');
+            previewImage.src = URL.createObjectURL(file);
+            document.getElementById('resultSection').style.display = 'flex';
+            document.getElementById('jsonOutput').textContent = "Processing...";
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                document.getElementById('jsonOutput').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('jsonOutput').textContent = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
