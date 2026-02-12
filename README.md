@@ -1,4 +1,4 @@
-# Intelligent Document Processing System
+# Insurance claim document verification
 
 This project is a scaffold for an Intelligent Document Processing System using FastAPI and Google Gemini.
 
